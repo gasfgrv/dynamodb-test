@@ -15,7 +15,7 @@ resource "aws_dynamodb_table" "music_table" {
   }
 }
 
-resource "aws_dynamodb_table_item" "music_item" {
+resource "aws_dynamodb_table_item" "music_item_1" {
   table_name = aws_dynamodb_table.music_table.name
   hash_key   = aws_dynamodb_table.music_table.hash_key
   range_key  = aws_dynamodb_table.music_table.range_key
@@ -27,6 +27,54 @@ resource "aws_dynamodb_table_item" "music_item" {
   "ProducedBy": {"L": [{"S": "Nimbus 9"}, {"S": "Jack Richardson"}]},
   "Album": {"S": "Wheatfield Soul"},
   "ReleasedIn": {"N": "1969"}
+}
+ITEM
+}
+
+resource "aws_dynamodb_table_item" "music_item_2" {
+  table_name = aws_dynamodb_table.music_table.name
+  hash_key   = aws_dynamodb_table.music_table.hash_key
+  range_key  = aws_dynamodb_table.music_table.range_key
+  item       = <<ITEM
+{
+  "SongTitle": {"S": "Se..."},
+  "Artist": {"S": "Djavan"},
+  "Album": {"S": "Coisa de Acender"},
+  "ProducedBy": {"L": [{"S": "Djavan"}, {"S": "Ronnie Forster"}]},
+  "ReleasedIn": {"N": "1992"},
+  "WrittenBy": {"L": [{"S": "Djavan"}]}
+}
+ITEM
+}
+
+resource "aws_dynamodb_table_item" "music_item_3" {
+  table_name = aws_dynamodb_table.music_table.name
+  hash_key   = aws_dynamodb_table.music_table.hash_key
+  range_key  = aws_dynamodb_table.music_table.range_key
+  item       = <<ITEM
+{
+  "SongTitle":{"S":"LinhadoEquador"},
+  "Artist":{"S":"Djavan"},
+  "Album":{"S":"CoisadeAcender"},
+  "ProducedBy":{"L":[{"S":"Djavan"},{"S":"RonnieForster"}]},
+  "ReleasedIn":{"N":"1992"},
+  "WrittenBy":{"L":[{"S":"Djavan"},{"S":"CaetanoVeloso"}]}
+}
+ITEM
+}
+
+resource "aws_dynamodb_table_item" "music_item_4" {
+  table_name = aws_dynamodb_table.music_table.name
+  hash_key   = aws_dynamodb_table.music_table.hash_key
+  range_key  = aws_dynamodb_table.music_table.range_key
+  item       = <<ITEM
+{
+  "SongTitle":{"S":"LinhadoEquador"},
+  "Artist":{"S":"Rael"},
+  "Album":{"S":"DoQuintal"},
+  "ProducedBy":{"L":[{"S":"MônicaAgena"}]},
+  "ReleasedIn":{"N":"2021"},
+  "WrittenBy":{"L":[{"S":"Djavan"},{"S":"CaetanoVeloso"}]}
 }
 ITEM
 }
