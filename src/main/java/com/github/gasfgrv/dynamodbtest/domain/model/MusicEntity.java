@@ -30,8 +30,16 @@ public class MusicEntity {
     @DynamoDBAttribute(attributeName = "ReleasedIn")
     private Integer releasedIn;
 
-    public void unknowArtist() {
-        this.setArtist("Unknow Artist");
+    public void unknownArtist() {
+        this.setArtist("Unknown Artist");
+    }
+
+    public void unknownAlbum() {
+        this.setAlbum("Unknown Album");
+    }
+
+    public void unknownYear() {
+        this.setReleasedIn(0);
     }
 
 }

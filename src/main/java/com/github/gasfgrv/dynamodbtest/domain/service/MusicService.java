@@ -1,8 +1,9 @@
 package com.github.gasfgrv.dynamodbtest.domain.service;
 
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
-import com.github.gasfgrv.dynamodbtest.domain.dao.MusicRepository;
+import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
+import com.github.gasfgrv.dynamodbtest.domain.repository.MusicRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +18,19 @@ public class MusicService {
 
     public MusicEntity addASong(MusicEntity music) {
         if (music.getArtist() == null) {
-            music.unknowArtist();
+            music.unknownArtist();
+        }
+
+        if (music.getAlbum() == null) {
+            music.unknownAlbum();
+        }
+
+        if (music.getReleasedIn() == null) {
+            music.unknownYear();
         }
 
         music.setWrittenBy(formatNames(music.getWrittenBy()));
-        music.setProducedBy(formatNames(music.getWrittenBy()));
+        music.setProducedBy(formatNames(music.getProducedBy()));
 
         musicRepository.insertMusic(music);
 
@@ -30,8 +39,8 @@ public class MusicService {
 
     public MusicEntity findOneSong(String songName, String artist) {
         return Optional
-                .ofNullable(musicRepository.loadMusic(artist, songName))
-                .orElseThrow(() -> new ResourceNotFoundException("Sorry but I can't find this music"));
+                .ofNullable(musicRepository.loadMusic(songName, artist))
+                .orElseThrow(() -> new MusicNotFoundException("Sorry but I can't find this music"));
     }
 
     public List<MusicEntity> filterMusics(String songName, String artist) {
@@ -47,13 +56,19 @@ public class MusicService {
     private List<String> formatNames(List<String> names) {
         return names
                 .stream()
-                .map(name -> {
-                    var fullName = name.split("\\s");
-                    var firstName = fullName[0];
-                    var lastName = fullName[fullName.length - 1];
-                    return "%s %s".formatted(firstName, lastName);
-                })
+                .map(this::getFirstAndLastName)
                 .toList();
+    }
+
+    private String getFirstAndLastName(String name) {
+        if (!name.matches(".*\\s.*")) {
+            return name;
+        }
+
+        var fullName = name.split("\\s");
+        var firstName = fullName[0];
+        var lastName = fullName[fullName.length - 1];
+        return "%s %s".formatted(firstName, lastName);
     }
 
 }
