@@ -21,12 +21,38 @@ resource "aws_dynamodb_table_item" "music_item_1" {
   range_key  = aws_dynamodb_table.music_table.range_key
   item       = <<ITEM
 {
-  "SongTitle": {"S": "These Eyes"},
-  "Artist": {"S": "The Guess Who"},
-  "WrittenBy": {"L": [{"S": "Burton Cummings"}, {"S": "Randy Bachman"}]},
-  "ProducedBy": {"L": [{"S": "Nimbus 9"}, {"S": "Jack Richardson"}]},
-  "Album": {"S": "Wheatfield Soul"},
-  "ReleasedIn": {"N": "1969"}
+   "SongTitle":{
+      "S":"These Eyes"
+   },
+   "Artist":{
+      "S":"The Guess Who"
+   },
+   "WrittenBy":{
+      "L":[
+         {
+            "S":"Burton Cummings"
+         },
+         {
+            "S":"Randy Bachman"
+         }
+      ]
+   },
+   "ProducedBy":{
+      "L":[
+         {
+            "S":"Nimbus 9"
+         },
+         {
+            "S":"Jack Richardson"
+         }
+      ]
+   },
+   "Album":{
+      "S":"Wheatfield Soul"
+   },
+   "ReleasedIn":{
+      "N":"1969"
+   }
 }
 ITEM
 }
@@ -37,12 +63,35 @@ resource "aws_dynamodb_table_item" "music_item_2" {
   range_key  = aws_dynamodb_table.music_table.range_key
   item       = <<ITEM
 {
-  "SongTitle": {"S": "Se..."},
-  "Artist": {"S": "Djavan"},
-  "Album": {"S": "Coisa de Acender"},
-  "ProducedBy": {"L": [{"S": "Djavan"}, {"S": "Ronnie Forster"}]},
-  "ReleasedIn": {"N": "1992"},
-  "WrittenBy": {"L": [{"S": "Djavan"}]}
+   "SongTitle":{
+      "S":"Se..."
+   },
+   "Artist":{
+      "S":"Djavan"
+   },
+   "Album":{
+      "S":"Coisa de Acender"
+   },
+   "ProducedBy":{
+      "L":[
+         {
+            "S":"Djavan"
+         },
+         {
+            "S":"Ronnie Forster"
+         }
+      ]
+   },
+   "ReleasedIn":{
+      "N":"1992"
+   },
+   "WrittenBy":{
+      "L":[
+         {
+            "S":"Djavan"
+         }
+      ]
+   }
 }
 ITEM
 }
@@ -53,12 +102,38 @@ resource "aws_dynamodb_table_item" "music_item_3" {
   range_key  = aws_dynamodb_table.music_table.range_key
   item       = <<ITEM
 {
-  "SongTitle":{"S":"LinhadoEquador"},
-  "Artist":{"S":"Djavan"},
-  "Album":{"S":"CoisadeAcender"},
-  "ProducedBy":{"L":[{"S":"Djavan"},{"S":"RonnieForster"}]},
-  "ReleasedIn":{"N":"1992"},
-  "WrittenBy":{"L":[{"S":"Djavan"},{"S":"CaetanoVeloso"}]}
+   "SongTitle":{
+      "S":"Linha do Equador"
+   },
+   "Artist":{
+      "S":"Djavan"
+   },
+   "Album":{
+      "S":"Coisa de Acender"
+   },
+   "ProducedBy":{
+      "L":[
+         {
+            "S":"Djavan"
+         },
+         {
+            "S":"Ronnie Forster"
+         }
+      ]
+   },
+   "ReleasedIn":{
+      "N":"1992"
+   },
+   "WrittenBy":{
+      "L":[
+         {
+            "S":"Djavan"
+         },
+         {
+            "S":"Caetano Veloso"
+         }
+      ]
+   }
 }
 ITEM
 }
@@ -69,12 +144,35 @@ resource "aws_dynamodb_table_item" "music_item_4" {
   range_key  = aws_dynamodb_table.music_table.range_key
   item       = <<ITEM
 {
-  "SongTitle":{"S":"LinhadoEquador"},
-  "Artist":{"S":"Rael"},
-  "Album":{"S":"DoQuintal"},
-  "ProducedBy":{"L":[{"S":"MônicaAgena"}]},
-  "ReleasedIn":{"N":"2021"},
-  "WrittenBy":{"L":[{"S":"Djavan"},{"S":"CaetanoVeloso"}]}
+   "SongTitle":{
+      "S":"Linha do Equador"
+   },
+   "Artist":{
+      "S":"Rael"
+   },
+   "Album":{
+      "S":"Do Quintal"
+   },
+   "ProducedBy":{
+      "L":[
+         {
+            "S":"Mônica Agena"
+         }
+      ]
+   },
+   "ReleasedIn":{
+      "N":"2021"
+   },
+   "WrittenBy":{
+      "L":[
+         {
+            "S":"Djavan"
+         },
+         {
+            "S":"Caetano Veloso"
+         }
+      ]
+   }
 }
 ITEM
 }
