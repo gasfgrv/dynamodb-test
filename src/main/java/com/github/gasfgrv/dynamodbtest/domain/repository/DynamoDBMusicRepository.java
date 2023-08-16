@@ -27,11 +27,17 @@ public class DynamoDBMusicRepository implements MusicRepository {
 
     @Override
     public List<MusicEntity> queryMusics(String songTitle, String artist) {
+        var keyConditionExpression = "SongTitle = :v1";
         var atrributes = new HashMap<String, AttributeValue>();
         atrributes.put(":v1", new AttributeValue().withS(songTitle));
 
+        if (artist != null) {
+            keyConditionExpression += " and Artist = :v2";
+            atrributes.put(":v2", new AttributeValue().withS(artist));
+        }
+
         var queryExpression = new DynamoDBQueryExpression<MusicEntity>()
-                .withKeyConditionExpression("SongTitle = :v1")
+                .withKeyConditionExpression(keyConditionExpression)
                 .withExpressionAttributeValues(atrributes);
 
         return dynamoDBMapper.query(MusicEntity.class, queryExpression);
