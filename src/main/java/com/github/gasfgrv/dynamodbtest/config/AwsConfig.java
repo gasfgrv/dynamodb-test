@@ -1,9 +1,12 @@
 package com.github.gasfgrv.dynamodbtest.config;
 
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,16 +29,30 @@ public class AwsConfig {
     private String secretKey;
 
     @Bean
-    public DynamoDBMapper dynamoDBMapper() {
-        var credentials = new BasicAWSCredentials(accessKey, secretKey);
-        var credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-        var endpointConfiguration = new EndpointConfiguration(serviceEndpoint, signingRegion);
-        var dynamoDB = AmazonDynamoDBClientBuilder
+    public AWSCredentials awsCredentials() {
+        return new BasicAWSCredentials(accessKey, secretKey);
+    }
+
+    @Bean
+    public AWSCredentialsProvider awsCredentialsProvider() {
+        return new AWSStaticCredentialsProvider(awsCredentials());
+    }
+
+    @Bean
+    public AmazonDynamoDB amazonDynamoDBClient() {
+        var endpointConfiguration = new AwsClientBuilder
+                .EndpointConfiguration(serviceEndpoint, signingRegion);
+
+        return AmazonDynamoDBClientBuilder
                 .standard()
                 .withEndpointConfiguration(endpointConfiguration)
-                .withCredentials(credentialsProvider)
+                .withCredentials(awsCredentialsProvider())
                 .build();
-        return new DynamoDBMapper(dynamoDB);
+    }
+
+    @Bean
+    public DynamoDBMapper dynamoDBMapper() {
+        return new DynamoDBMapper(amazonDynamoDBClient());
     }
 
 }
