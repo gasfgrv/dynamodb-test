@@ -15,11 +15,9 @@ import lombok.Setter;
 @DynamoDBTable(tableName = "tb_music")
 public class MusicEntity {
 
-    @DynamoDBHashKey
-    @DynamoDBAttribute(attributeName = "SongTitle")
+    @DynamoDBHashKey(attributeName = "SongTitle")
     private String songTitle;
-    @DynamoDBRangeKey
-    @DynamoDBAttribute(attributeName = "Artist")
+    @DynamoDBRangeKey(attributeName = "Artist")
     private String artist;
     @DynamoDBAttribute(attributeName = "WrittenBy")
     private List<String> writtenBy;
