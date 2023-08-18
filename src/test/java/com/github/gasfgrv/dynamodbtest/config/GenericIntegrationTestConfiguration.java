@@ -10,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.DYNAMODB;
 
 @Testcontainers
-public class GenericIntegrationTest {
+public class GenericIntegrationTestConfiguration {
 
     private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName
             .parse("localstack/localstack:latest");
