@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTest;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterAll;
@@ -14,44 +15,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import static com.amazonaws.services.dynamodbv2.model.KeyType.HASH;
 import static com.amazonaws.services.dynamodbv2.model.KeyType.RANGE;
 import static com.amazonaws.services.dynamodbv2.model.ScalarAttributeType.S;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.DYNAMODB;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class DynamoDBMusicRepositoryIntegrationTest {
+class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTest {
 
     @Autowired
     private DynamoDBMusicRepository musicRepository;
 
     @Autowired
     private AmazonDynamoDB amazonDynamoDB;
-
-    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName
-            .parse("localstack/localstack:latest");
-
-    @Container
-    private static final LocalStackContainer CONTAINER = new LocalStackContainer(DOCKER_IMAGE_NAME)
-            .withServices(DYNAMODB);
-
-    @DynamicPropertySource
-    private static void awsProperties(DynamicPropertyRegistry registry) {
-        registry.add("aws.serviceEndpoint", () -> CONTAINER.getEndpointOverride(DYNAMODB));
-        registry.add("aws.signingRegion", CONTAINER::getRegion);
-        registry.add("aws.accessKey", CONTAINER::getAccessKey);
-        registry.add("aws.secretKey", CONTAINER::getSecretKey);
-    }
 
     @BeforeAll
     static void beforeAll() {
