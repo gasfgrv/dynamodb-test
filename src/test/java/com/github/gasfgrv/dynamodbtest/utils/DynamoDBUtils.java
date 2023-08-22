@@ -5,16 +5,15 @@ import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import java.util.ArrayList;
-import lombok.experimental.UtilityClass;
 
 import static com.amazonaws.services.dynamodbv2.model.KeyType.HASH;
 import static com.amazonaws.services.dynamodbv2.model.KeyType.RANGE;
 import static com.amazonaws.services.dynamodbv2.model.ScalarAttributeType.S;
 
-@UtilityClass
+
 public class DynamoDBUtils {
 
-    public void createTable(AmazonDynamoDB amazonDynamoDB) {
+    public static void createTable(AmazonDynamoDB amazonDynamoDB) {
         var attributeDefinitions = new ArrayList<AttributeDefinition>();
         attributeDefinitions.add(
                 new AttributeDefinition()
@@ -44,7 +43,7 @@ public class DynamoDBUtils {
                 .createTable(attributeDefinitions, tableName, keySchema, provisionedThroughput);
     }
 
-    public void deleteTable(AmazonDynamoDB amazonDynamoDB) {
+    public static void deleteTable(AmazonDynamoDB amazonDynamoDB) {
         var tableName = "tb_music";
         amazonDynamoDB.deleteTable(tableName);
     }
