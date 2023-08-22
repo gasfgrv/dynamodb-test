@@ -4,7 +4,9 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguration;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -36,11 +38,19 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
         CONTAINER.stop();
     }
 
+    @BeforeEach
+    void setUp() {
+        createTable(amazonDynamoDB);
+    }
+
+    @AfterEach
+    void tearDown() {
+        deleteTable(amazonDynamoDB);
+    }
+
     @Test
     @Order(1)
-    void testInsertMusic() throws InterruptedException {
-        createTable(amazonDynamoDB);
-
+    void testInsertMusic() {
         var music = MusicMock.getMusic();
         musicRepository.insertMusic(music);
 
@@ -56,6 +66,7 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
     @Order(2)
     void testLoadMusic() {
         var expected = MusicMock.getMusic();
+        musicRepository.insertMusic(expected);
 
         var actual = musicRepository
                 .loadMusic("Falso Realismo", "Jambu");
@@ -69,16 +80,10 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
     @Order(3)
     void testQueryMusicsWithAndWithoutArtist() {
         var musics = MusicMock.getMusics();
-
         musics.forEach(musicRepository::insertMusic);
 
         var queryMusicsWithArtist = musicRepository
                 .queryMusics("Ain't No Sunshine", "Bill Withers")
-                .stream()
-                .toList();
-
-        var queryMusicsWithoutArtist = musicRepository
-                .queryMusics("Ain't No Sunshine", null)
                 .stream()
                 .toList();
 
@@ -87,12 +92,15 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsOnly(musics.get(0));
 
+        var queryMusicsWithoutArtist = musicRepository
+                .queryMusics("Ain't No Sunshine", null)
+                .stream()
+                .toList();
+
         assertThat(queryMusicsWithoutArtist)
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .hasSameElementsAs(musics);
-
-        deleteTable(amazonDynamoDB);
     }
 
 }
