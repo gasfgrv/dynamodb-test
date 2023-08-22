@@ -1,6 +1,5 @@
 package com.github.gasfgrv.dynamodbtest.domain.service;
 
-import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.domain.repository.MusicRepository;
@@ -17,17 +16,9 @@ public class MusicService {
     private final MusicRepository musicRepository;
 
     public MusicEntity addASong(MusicEntity music) {
-        if (music.getArtist() == null) {
-            music.unknownArtist();
-        }
-
-        if (music.getAlbum() == null) {
-            music.unknownAlbum();
-        }
-
-        if (music.getReleasedIn() == null) {
-            music.unknownYear();
-        }
+        checkIfUnknownArtist(music);
+        checkIfUnknownAlbum(music);
+        checkIfUnknownReleaseYear(music);
 
         music.setWrittenBy(formatNames(music.getWrittenBy()));
         music.setProducedBy(formatNames(music.getProducedBy()));
@@ -69,6 +60,24 @@ public class MusicService {
         var firstName = fullName[0];
         var lastName = fullName[fullName.length - 1];
         return "%s %s".formatted(firstName, lastName);
+    }
+
+    private static void checkIfUnknownReleaseYear(MusicEntity music) {
+        Optional
+                .ofNullable(music.getReleasedIn())
+                .ifPresentOrElse(integer -> {}, music::unknownYear);
+    }
+
+    private static void checkIfUnknownAlbum(MusicEntity music) {
+        Optional
+                .ofNullable(music.getAlbum())
+                .ifPresentOrElse(integer -> {}, music::unknownAlbum);
+    }
+
+    private static void checkIfUnknownArtist(MusicEntity music) {
+        Optional
+                .ofNullable(music.getArtist())
+                .ifPresentOrElse(integer -> {}, music::unknownArtist);
     }
 
 }
