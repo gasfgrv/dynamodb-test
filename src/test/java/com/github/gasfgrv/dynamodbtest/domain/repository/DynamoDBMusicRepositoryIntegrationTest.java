@@ -3,23 +3,15 @@ package com.github.gasfgrv.dynamodbtest.domain.repository;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguration;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.createTable;
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.deleteTable;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfiguration {
 
     @Autowired
@@ -27,16 +19,6 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
 
     @Autowired
     private AmazonDynamoDB amazonDynamoDB;
-
-    @BeforeAll
-    static void beforeAll() {
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        CONTAINER.stop();
-    }
 
     @BeforeEach
     void setUp() {
@@ -49,7 +31,6 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
     }
 
     @Test
-    @Order(1)
     void testInsertMusic() {
         var music = MusicMock.getMusic();
         musicRepository.insertMusic(music);
@@ -63,7 +44,6 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
     }
 
     @Test
-    @Order(2)
     void testLoadMusic() {
         var expected = MusicMock.getMusic();
         musicRepository.insertMusic(expected);
@@ -77,7 +57,6 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
     }
 
     @Test
-    @Order(3)
     void testQueryMusicsWithAndWithoutArtist() {
         var musics = MusicMock.getMusics();
         musics.forEach(musicRepository::insertMusic);

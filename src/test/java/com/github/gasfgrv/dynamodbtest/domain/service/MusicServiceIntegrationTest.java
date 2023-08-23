@@ -4,24 +4,16 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguration;
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.createTable;
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.deleteTable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
 
     @Autowired
@@ -29,16 +21,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
 
     @Autowired
     private AmazonDynamoDB amazonDynamoDB;
-
-    @BeforeAll
-    static void beforeAll() {
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        CONTAINER.stop();
-    }
 
     @BeforeEach
     void setUp() {
@@ -51,7 +33,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(1)
     void testAddASong() {
         var music = MusicMock.getMusic();
         var addedSong = musicService.addASong(music);
@@ -69,7 +50,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(2)
     void testAddASongIfUnknownArtist() {
         var music = MusicMock.getMusic();
         music.setArtist(null);
@@ -92,7 +72,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(3)
     void testAddASongIfUnknownAlbum() {
         var music = MusicMock.getMusic();
         music.setAlbum(null);
@@ -115,7 +94,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(4)
     void testAddASongIfUnknownReleaseYear() {
         var music = MusicMock.getMusic();
         music.setReleasedIn(null);
@@ -138,7 +116,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(5)
     void testFindOneSong() {
         var music = MusicMock.getMusic();
         musicService.addASong(music);
@@ -153,7 +130,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(6)
     void testFindOneSongThrowingMusicNotFoundException() {
         var music = MusicMock.getMusic();
         musicService.addASong(music);
@@ -165,7 +141,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(7)
     void testFilterMusics() {
         var musics = MusicMock.getMusics();
         musics.forEach(musicService::addASong);
@@ -188,7 +163,6 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
     }
 
     @Test
-    @Order(8)
     void testFilterMusicsEmpty() {
         var music = MusicMock.getMusic();
         musicService.addASong(music);
