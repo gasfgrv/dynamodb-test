@@ -12,6 +12,7 @@ on:
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_REPO }}
   API_TAG: ${{ secrets.API_TAG }}
 
 jobs:
@@ -96,5 +97,5 @@ jobs:
         with:
           username: ${{env.DOCKERHUB_USERNAME}}
           password: ${{env.DOCKERHUB_TOKEN}}
-          repository: gustosilva/file-storage-api-s3
+          repository: ${{env.DOCKERHUB_REPO}}
           readme: "./readme.md"
