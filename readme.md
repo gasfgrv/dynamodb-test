@@ -4,7 +4,7 @@ API para testes de consultas com a SDK da AWS para o DynamoDB.
 
 ## Status do Projeto
 
-![Static Badge](https://img.shields.io/badge/status-em%20desenvolvimento-brightgreen?style=for-the-badge&logo=appveyor)
+![Static Badge](https://img.shields.io/badge/status-concluido-brightgreen?style=for-the-badge&logo=appveyor)
 
 ## Funcionalidades
 
