@@ -1,4 +1,4 @@
-package com.github.gasfgrv.dynamodbtest.config;
+package com.github.gasfgrv.dynamodbtest.commons.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

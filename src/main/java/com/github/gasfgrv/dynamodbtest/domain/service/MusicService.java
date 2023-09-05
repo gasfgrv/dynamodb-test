@@ -1,11 +1,15 @@
 package com.github.gasfgrv.dynamodbtest.domain.service;
 
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
+import com.github.gasfgrv.dynamodbtest.domain.exception.NullFieldsException;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.domain.repository.MusicRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -65,19 +69,49 @@ public class MusicService {
     private static void checkIfUnknownReleaseYear(MusicEntity music) {
         Optional
                 .ofNullable(music.getReleasedIn())
-                .ifPresentOrElse(integer -> {}, music::unknownYear);
+                .ifPresentOrElse(integer -> {
+                }, music::unknownYear);
     }
 
     private static void checkIfUnknownAlbum(MusicEntity music) {
         Optional
                 .ofNullable(music.getAlbum())
-                .ifPresentOrElse(integer -> {}, music::unknownAlbum);
+                .ifPresentOrElse(integer -> {
+                }, music::unknownAlbum);
     }
 
     private static void checkIfUnknownArtist(MusicEntity music) {
         Optional
                 .ofNullable(music.getArtist())
-                .ifPresentOrElse(integer -> {}, music::unknownArtist);
+                .ifPresentOrElse(integer -> {
+                }, music::unknownArtist);
+    }
+
+    public List<MusicEntity> findBy(Map<String, String> fields) {
+        if (checkIfAllFieldsAreNull(fields)) {
+            throw new NullFieldsException(
+                    "Please enter at least one of the following parameters: 'album', 'produced_by', 'released_in', 'written_by'"
+            );
+        }
+
+        var fieldsToSearch = filterNonNullFiels(fields);
+        return musicRepository.scanMusics(fieldsToSearch);
+    }
+
+    private Map<String, String> filterNonNullFiels(Map<String, String> fields) {
+        return fields
+                .entrySet()
+                .stream()
+                .filter(entry -> Objects.nonNull(entry.getValue()))
+                .filter(entry -> !entry.getValue().isEmpty())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private boolean checkIfAllFieldsAreNull(Map<String, String> fields) {
+        return fields
+                .values()
+                .stream()
+                .allMatch(Objects::isNull);
     }
 
 }

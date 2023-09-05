@@ -1,4 +1,4 @@
-package com.github.gasfgrv.dynamodbtest.config;
+package com.github.gasfgrv.dynamodbtest.commons.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

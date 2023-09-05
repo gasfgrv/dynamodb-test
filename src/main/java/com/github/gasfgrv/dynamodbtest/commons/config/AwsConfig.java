@@ -1,4 +1,4 @@
-package com.github.gasfgrv.dynamodbtest.config;
+package com.github.gasfgrv.dynamodbtest.commons.config;
 
 
 import com.amazonaws.auth.AWSCredentials;

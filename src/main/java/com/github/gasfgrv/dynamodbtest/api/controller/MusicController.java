@@ -7,6 +7,7 @@ import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.domain.service.MusicService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -60,6 +61,27 @@ public class MusicController {
     public ResponseEntity<List<MusicsResponse>> queryMusics(@RequestParam(name = "song_title") String songTitle,
                                                             @RequestParam(name = "artist", required = false) String artist) {
         var musics = musicService.filterMusics(songTitle, artist);
+        var musicsResponse = musics
+                .stream()
+                .map(music -> modelMapper.map(music, MusicsResponse.class))
+                .toList();
+
+        return ResponseEntity.ok(musicsResponse);
+    }
+
+    @GetMapping("/findBy")
+    public ResponseEntity<List<MusicsResponse>> findMusicBy(@RequestParam(name = "album", required = false) String album,
+                                                            @RequestParam(name = "produced_by", required = false) String producedBy,
+                                                            @RequestParam(name = "released_in", required = false) String releasedIn,
+                                                            @RequestParam(name = "written_by", required = false) String writtenBy) {
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", album);
+        fields.put("ProducedBy", producedBy);
+        fields.put("ReleasedIn", releasedIn);
+        fields.put("WrittenBy", writtenBy);
+
+        var musics = musicService.findBy(fields);
         var musicsResponse = musics
                 .stream()
                 .map(music -> modelMapper.map(music, MusicsResponse.class))
