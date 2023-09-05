@@ -4,6 +4,7 @@ import com.github.gasfgrv.dynamodbtest.api.model.MusicRequest;
 import com.github.gasfgrv.dynamodbtest.api.model.MusicResponse;
 import com.github.gasfgrv.dynamodbtest.api.model.MusicsResponse;
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
+import com.github.gasfgrv.dynamodbtest.domain.exception.NullFieldsException;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.domain.service.MusicService;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
@@ -24,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -265,6 +267,95 @@ class MusicControllerTest {
 
         verify(musicService, times(1))
                 .filterMusics(anyString(), anyString());
+
+        verify(modelMapper, never())
+                .map(any(MusicEntity.class), eq(MusicsResponse.class));
+    }
+
+    @Test
+    void testFindMusicBy() {
+        var music = MusicMock.getMusic();
+
+        var mappedMusic = new MusicsResponse();
+        mappedMusic.setSongTitle(music.getSongTitle());
+        mappedMusic.setArtist(music.getArtist());
+        mappedMusic.setAlbum(music.getAlbum());
+        mappedMusic.setReleasedIn(music.getReleasedIn());
+
+        willReturn(Collections.singletonList(music))
+                .given(musicService)
+                .findBy(anyMap());
+
+        willReturn(mappedMusic)
+                .given(modelMapper)
+                .map(any(MusicEntity.class), eq(MusicEntity.class));
+
+        var response = musicController
+                .findMusicBy(music.getAlbum(),
+                        music.getProducedBy().get(0),
+                        String.valueOf(music.getReleasedIn()),
+                        music.getWrittenBy().get(0));
+
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        assertThat(response.getBody())
+                .isNotEmpty()
+                .hasSize(1);
+
+        verify(musicService, times(1))
+                .findBy(anyMap());
+
+        verify(modelMapper, times(1))
+                .map(any(MusicEntity.class), eq(MusicsResponse.class));
+    }
+
+    @Test
+    void testFindMusicByBadRequest() {
+        var music = MusicMock.getMusic();
+
+        var exception = new NullFieldsException("Please enter at least one of the following parameters: 'album', 'produced_by', 'released_in', 'written_by'");
+
+        willThrow(exception)
+                .given(musicService)
+                .findBy(anyMap());
+
+        assertThatExceptionOfType(NullFieldsException.class)
+                .isThrownBy(() -> musicController
+                        .findMusicBy("", null, "", null))
+                .withMessage(exception.getMessage());
+
+        verify(musicService, times(1))
+                .findBy(anyMap());
+
+        verify(modelMapper, never())
+                .map(music, MusicResponse.class);
+    }
+
+    @Test
+    void testFindMusicByEmpty() {
+        var musics = Collections.emptyList();
+
+        willReturn(musics)
+                .given(musicService)
+                .findBy(anyMap());
+
+        var response = musicController
+                .findMusicBy(
+                        "Falso Realismo",
+                        "Yasmin Moura Costa",
+                        "2021",
+                        "Gabriel Mar Dantas"
+                );
+
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        assertThat(response.getBody())
+                .isEmpty();
+
+        verify(musicService, times(1))
+                .findBy(anyMap());
 
         verify(modelMapper, never())
                 .map(any(MusicEntity.class), eq(MusicsResponse.class));

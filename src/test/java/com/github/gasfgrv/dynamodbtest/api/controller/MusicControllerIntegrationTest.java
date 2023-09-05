@@ -5,20 +5,16 @@ import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguratio
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
 import io.restassured.RestAssured;
 import java.util.HashMap;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.createTable;
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.deleteTable;
 import static com.github.gasfgrv.dynamodbtest.utils.DynamoDBUtils.insertInTable;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -50,17 +46,20 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         var music = MusicMock.getMusic();
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(music)
+
                 // when
                 .when()
                 .log()
                 .everything()
                 .post()
+
                 // then
                 .then()
                 .log()
@@ -83,7 +82,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         music.setArtist(null);
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -118,7 +118,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         music.setAlbum(null);
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -153,7 +154,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         music.setReleasedIn(null);
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -192,7 +194,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         queryParams.put("artist", music.getArtist());
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -228,7 +231,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         queryParams.put("artist", music.getArtist());
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -259,7 +263,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         queryParams.put("artist", musics.get(0).getArtist());
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -294,7 +299,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         queryParams.put("song_title", musics.get(0).getSongTitle());
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -333,7 +339,8 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
         queryParams.put("artist", music.getArtist());
 
         // given
-        given()
+        RestAssured
+                .given()
                 .log()
                 .everything()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -345,6 +352,96 @@ class MusicControllerIntegrationTest extends GenericIntegrationTestConfiguration
                 .log()
                 .everything()
                 .get("/filter")
+
+                // then
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+
+    @Test
+    void testFindMusicBy() {
+        var musics = MusicMock.getMusics();
+        musics.forEach(music -> insertInTable(amazonDynamoDB, music));
+
+        var queryParams = new HashMap<String, String>();
+        queryParams.put("written_by", musics.get(0).getWrittenBy().get(0));
+
+        // given
+        RestAssured
+                .given()
+                .log()
+                .everything()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParams(queryParams)
+
+                // when
+                .when()
+                .log()
+                .everything()
+                .get("/findBy")
+
+                // then
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(200)
+                .body("size()", is(2));
+    }
+
+    @Test
+    void testFindMusicByBadRequest() {
+        var musics = MusicMock.getMusics();
+        musics.forEach(music -> insertInTable(amazonDynamoDB, music));
+
+        // given
+        RestAssured
+                .given()
+                .log()
+                .everything()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+
+                // when
+                .when()
+                .log()
+                .everything()
+                .get("/findBy")
+
+                // then
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(400);
+    }
+
+    @Test
+    void testFindMusicByEmpty() {
+        var musics = MusicMock.getMusics();
+
+        var queryParams = new HashMap<String, String>();
+        queryParams.put("written_by", musics.get(0).getWrittenBy().get(0));
+
+        // given
+        RestAssured
+                .given()
+                .log()
+                .everything()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParams(queryParams)
+
+                // when
+                .when()
+                .log()
+                .everything()
+                .get("/findBy")
 
                 // then
                 .then()
