@@ -21,6 +21,7 @@
         <aws-sdk.version>1.12.524</aws-sdk.version>
         <testcontainers.version>1.18.3</testcontainers.version>
         <rest-assured.version>5.3.1</rest-assured.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +51,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>

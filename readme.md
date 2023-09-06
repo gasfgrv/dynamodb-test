@@ -16,221 +16,177 @@ API para testes de consultas com a SDK da AWS para o DynamoDB.
 ## Documentação da API
 
 ```yaml
-{
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Music API",
-    "description": "This api serves as a test for the aws sdk for dynamodb functions (query, load and save).",
-    "contact": {
-      "name": "Gustavo Silva",
-      "url": "https://github.com/gasfgrv",
-      "email": "gustavo_almeida11@hotmail.com"
-    },
-    "version": "1.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Server URL in Development environment"
-    }
-  ],
-  "paths": {
-    "/music": {
-      "post": {
-        "tags": [
-          "Music"
-        ],
-        "operationId": "saveMusic",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MusicRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/MusicResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/music/find": {
-      "get": {
-        "tags": [
-          "Music"
-        ],
-        "operationId": "loadMusic",
-        "parameters": [
-          {
-            "name": "song_title",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "artist",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/MusicResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/music/filter": {
-      "get": {
-        "tags": [
-          "Music"
-        ],
-        "operationId": "queryMusics",
-        "parameters": [
-          {
-            "name": "song_title",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "artist",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MusicsResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "MusicRequest": {
-        "required": [
-          "song_title"
-        ],
-        "type": "object",
-        "properties": {
-          "song_title": {
-            "type": "string"
-          },
-          "artist": {
-            "type": "string"
-          },
-          "written_by": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "produced_by": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "album": {
-            "type": "string"
-          },
-          "released_in": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "MusicResponse": {
-        "type": "object",
-        "properties": {
-          "song_title": {
-            "type": "string"
-          },
-          "artist": {
-            "type": "string"
-          },
-          "written_by": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "produced_by": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "album": {
-            "type": "string"
-          },
-          "released_in": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "MusicsResponse": {
-        "type": "object",
-        "properties": {
-          "song_title": {
-            "type": "string"
-          },
-          "artist": {
-            "type": "string"
-          },
-          "album": {
-            "type": "string"
-          },
-          "released_in": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      }
-    }
-  }
-}
+openapi: 3.0.1
+info:
+  title: Music API
+  description: "This API serves as a test for the AWS SDK for DynamoDB functions (query,\
+    \ scan, load and save)."
+  contact:
+    name: Gustavo Silva
+    url: https://github.com/gasfgrv
+    email: gustavo_almeida11@hotmail.com
+  version: "1.0"
+servers:
+  - url: http://localhost:8080
+    description: Server URL in the development environment
+paths:
+  /music:
+    post:
+      tags:
+        - Music
+      operationId: saveMusic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MusicRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MusicResponse'
+  /music/find:
+    get:
+      tags:
+        - Music
+      operationId: loadMusic
+      parameters:
+        - name: song_title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: artist
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MusicResponse'
+  /music/findBy:
+    get:
+      tags:
+        - Music
+      operationId: findMusicBy
+      parameters:
+        - name: album
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: produced_by
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: released_in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: written_by
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MusicsResponse'
+  /music/filter:
+    get:
+      tags:
+        - Music
+      operationId: queryMusics
+      parameters:
+        - name: song_title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: artist
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MusicsResponse'
+components:
+  schemas:
+    MusicRequest:
+      required:
+        - song_title
+      type: object
+      properties:
+        song_title:
+          type: string
+        artist:
+          type: string
+        written_by:
+          type: array
+          items:
+            type: string
+        produced_by:
+          type: array
+          items:
+            type: string
+        album:
+          type: string
+        released_in:
+          type: integer
+          format: int32
+    MusicResponse:
+      type: object
+      properties:
+        song_title:
+          type: string
+        artist:
+          type: string
+        written_by:
+          type: array
+          items:
+            type: string
+        produced_by:
+          type: array
+          items:
+            type: string
+        album:
+          type: string
+        released_in:
+          type: integer
+          format: int32
+    MusicsResponse:
+      type: object
+      properties:
+        song_title:
+          type: string
+        artist:
+          type: string
+        album:
+          type: string
+        released_in:
+          type: integer
+          format: int32
 ```
 
 ## Variáveis de Ambiente

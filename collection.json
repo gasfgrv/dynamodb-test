@@ -1,1 +1,221 @@
-{"_type":"export","__export_format":4,"__export_date":"2023-08-17T14:05:54.757Z","__export_source":"insomnia.desktop.app:v2023.2.2","resources":[{"_id":"req_b939e5ecb8b4446e9cc3a500573da578","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692281089936,"created":1692147801046,"url":"http://localhost:8080/v3/api-docs","name":"Api Docs","description":"","method":"GET","body":{},"parameters":[],"headers":[],"authentication":{},"metaSortKey":-1692147801046,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","parentId":null,"modified":1692141501927,"created":1692141501927,"name":"music","description":"","scope":"collection","_type":"workspace"},{"_id":"req_39fefffbb78a445c85b887961ee469ea","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692144105059,"created":1692143895746,"url":"localhost:8080/music/find","name":"Find a song","description":"","method":"GET","body":{},"parameters":[{"name":"song_title","value":"Linha do Equador","id":"pair_af26cea305d449a5ae1834a7f802ce2a"},{"name":"artist","value":"Djavan","id":"pair_ccab5d557f374c7d8e91aef313f76ee3"}],"headers":[],"authentication":{},"metaSortKey":-1692143895746,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_65e37434d5ba40e2b853eea2fb600938","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692281066019,"created":1692146145105,"url":"localhost:8080/music/filter","name":"Query a song","description":"","method":"GET","body":{},"parameters":[{"name":"song_title","value":"Linha do Equador","id":"pair_af26cea305d449a5ae1834a7f802ce2a"},{"id":"pair_780cfbb9d9ce441480be02e70d43c345","name":"artist","value":"Djavan","description":"","disabled":true}],"headers":[],"authentication":{},"metaSortKey":-1692142700912,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_7a4b8aafeb284fc194a06ad80eb0c338","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692143891874,"created":1692141506078,"url":"localhost:8080/music","name":"Add a song","description":"","method":"POST","body":{"mimeType":"application/json","text":"{\n\t\"song_title\": \"Linha do Equador\",\n\t\"artist\": \"Djavan\",\n\t\"album\": \"Coisa de Acender\",\n\t\"produced_by\": [\n\t\t\"Djavan\",\n\t\t\"Ronnie Forster\"\n\t],\n\t\"released_in\": 1992,\n\t\"written_by\": [\n\t\t\"Djavan\",\n\t\t\"Caetano Veloso\"\n\t]\n}"},"parameters":[],"headers":[{"name":"Content-Type","value":"application/json"}],"authentication":{},"metaSortKey":-1692141506078,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"env_fe67bfa2fae2254b84103c61afa4a5e9cace635c","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692141501933,"created":1692141501933,"name":"Base Environment","data":{},"dataPropertyOrder":null,"color":null,"isPrivate":false,"metaSortKey":1692141501933,"_type":"environment"},{"_id":"jar_fe67bfa2fae2254b84103c61afa4a5e9cace635c","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692141501937,"created":1692141501937,"name":"Default Jar","cookies":[],"_type":"cookie_jar"},{"_id":"spc_479b21df30e84dbb8c127612a50541a9","parentId":"wrk_c7cfa1eae36c46f6ad1a106a946ed72a","modified":1692141501928,"created":1692141501928,"fileName":"music","contents":"","contentType":"yaml","_type":"api_spec"}]}
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2023-09-06T04:15:37.088Z",
+  "__export_source": "insomnia.desktop.app:v2023.2.2",
+  "resources": [
+    {
+      "_id": "req_b939e5ecb8b4446e9cc3a500573da578",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1693973391064,
+      "created": 1692147801046,
+      "url": "http://localhost:8080/v3/api-docs.yaml",
+      "name": "Api Docs",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1692147801046,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "parentId": null,
+      "modified": 1692141501927,
+      "created": 1692141501927,
+      "name": "music",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_39fefffbb78a445c85b887961ee469ea",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1692144105059,
+      "created": 1692143895746,
+      "url": "localhost:8080/music/find",
+      "name": "Find a song",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "song_title",
+          "value": "Linha do Equador",
+          "id": "pair_af26cea305d449a5ae1834a7f802ce2a"
+        },
+        {
+          "name": "artist",
+          "value": "Djavan",
+          "id": "pair_ccab5d557f374c7d8e91aef313f76ee3"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1692143895746,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_65e37434d5ba40e2b853eea2fb600938",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1693869739807,
+      "created": 1692146145105,
+      "url": "localhost:8080/music/filter",
+      "name": "Query a song",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "song_title",
+          "value": "Se...",
+          "id": "pair_af26cea305d449a5ae1834a7f802ce2a"
+        },
+        {
+          "id": "pair_780cfbb9d9ce441480be02e70d43c345",
+          "name": "artist",
+          "value": "Djavan",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1692142700912,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_7f2664a107a6436c956f866720ef2815",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1693873046395,
+      "created": 1693868892965,
+      "url": "localhost:8080/music/findBy",
+      "name": "Find by field",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "album",
+          "value": "Coisa de Acender",
+          "id": "pair_d1f5a2c16305474982a4d5c0ec78c740",
+          "disabled": false
+        },
+        {
+          "name": "produced_by",
+          "value": "",
+          "id": "pair_a1d21961be154bdf96f1a9efdbad7221",
+          "disabled": true
+        },
+        {
+          "name": "released_in",
+          "value": "1992",
+          "id": "pair_15b7f31928084812a85e9e9e5876e00d"
+        },
+        {
+          "name": "written_by",
+          "value": "",
+          "id": "pair_bf0ed8ee86d649b7b97c6554fa18cdfa",
+          "disabled": true
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1692142103495,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_7a4b8aafeb284fc194a06ad80eb0c338",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1692143891874,
+      "created": 1692141506078,
+      "url": "localhost:8080/music",
+      "name": "Add a song",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"song_title\": \"Linha do Equador\",\n\t\"artist\": \"Djavan\",\n\t\"album\": \"Coisa de Acender\",\n\t\"produced_by\": [\n\t\t\"Djavan\",\n\t\t\"Ronnie Forster\"\n\t],\n\t\"released_in\": 1992,\n\t\"written_by\": [\n\t\t\"Djavan\",\n\t\t\"Caetano Veloso\"\n\t]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1692141506078,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_fe67bfa2fae2254b84103c61afa4a5e9cace635c",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1692141501933,
+      "created": 1692141501933,
+      "name": "Base Environment",
+      "data": {},
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1692141501933,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_fe67bfa2fae2254b84103c61afa4a5e9cace635c",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1692141501937,
+      "created": 1692141501937,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "spc_479b21df30e84dbb8c127612a50541a9",
+      "parentId": "wrk_c7cfa1eae36c46f6ad1a106a946ed72a",
+      "modified": 1692141501928,
+      "created": 1692141501928,
+      "fileName": "music",
+      "contents": "",
+      "contentType": "yaml",
+      "_type": "api_spec"
+    }
+  ]
+}
