@@ -139,7 +139,7 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
         assertThatExceptionOfType(MusicNotFoundException.class)
                 .isThrownBy(() -> musicService
                         .findOneSong("Vida Vazia", "Codinome Winchester"))
-                .withMessage("Sorry but I can't find this music");
+                .withMessage("Sorry, but I can't find this music");
     }
 
     @Test

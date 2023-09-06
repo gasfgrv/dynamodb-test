@@ -87,7 +87,7 @@ class MusicControllerTest {
                 .given(modelMapper)
                 .map(eq(music), eq(MusicResponse.class));
 
-        var response = musicController.saveMusic(musicRequest);
+        var response = musicController.saveMusic(musicRequest, new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.CREATED);
@@ -130,7 +130,7 @@ class MusicControllerTest {
                 .map(eq(music), eq(MusicResponse.class));
 
         var response = musicController
-                .loadMusic(music.getSongTitle(), music.getArtist());
+                .loadMusic(music.getSongTitle(), music.getArtist(), new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -159,7 +159,7 @@ class MusicControllerTest {
 
         assertThatExceptionOfType(MusicNotFoundException.class)
                 .isThrownBy(() -> musicController
-                        .loadMusic("Falso Realismo", "Jambu"))
+                        .loadMusic("Falso Realismo", "Jambu", new MockHttpServletRequest()))
                 .withMessage(exception.getMessage());
 
         verify(musicService, times(1))
@@ -188,7 +188,7 @@ class MusicControllerTest {
                 .map(any(MusicEntity.class), eq(MusicsResponse.class));
 
         var response = musicController
-                .queryMusics("Ain't No Sunshine", "Bill Withers");
+                .queryMusics("Ain't No Sunshine", "Bill Withers", new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -232,7 +232,7 @@ class MusicControllerTest {
                 .map(musics.get(1), MusicsResponse.class);
 
         var response = musicController
-                .queryMusics("Ain't No Sunshine", null);
+                .queryMusics("Ain't No Sunshine", null, new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -257,7 +257,7 @@ class MusicControllerTest {
                 .filterMusics(anyString(), anyString());
 
         var response = musicController
-                .queryMusics("Ain't No Sunshine", "Lighthouse Family");
+                .queryMusics("Ain't No Sunshine", "Lighthouse Family", new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -294,7 +294,8 @@ class MusicControllerTest {
                 .findMusicBy(music.getAlbum(),
                         music.getProducedBy().get(0),
                         String.valueOf(music.getReleasedIn()),
-                        music.getWrittenBy().get(0));
+                        music.getWrittenBy().get(0),
+                        new MockHttpServletRequest());
 
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
@@ -322,7 +323,11 @@ class MusicControllerTest {
 
         assertThatExceptionOfType(NullFieldsException.class)
                 .isThrownBy(() -> musicController
-                        .findMusicBy("", null, "", null))
+                        .findMusicBy("",
+                                null,
+                                "",
+                                null,
+                                new MockHttpServletRequest()))
                 .withMessage(exception.getMessage());
 
         verify(musicService, times(1))
@@ -345,7 +350,8 @@ class MusicControllerTest {
                         "Falso Realismo",
                         "Yasmin Moura Costa",
                         "2021",
-                        "Gabriel Mar Dantas"
+                        "Gabriel Mar Dantas",
+                        new MockHttpServletRequest()
                 );
 
         assertThat(response.getStatusCode())

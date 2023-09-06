@@ -143,7 +143,7 @@ class MusicServiceTest {
         assertThatExceptionOfType(MusicNotFoundException.class)
                 .isThrownBy(() ->
                         musicService.findOneSong("Evidências", "Chitãozinho & Xororó"))
-                .withMessage("Sorry but I can't find this music");
+                .withMessage("Sorry, but I can't find this music");
     }
 
     @Test
