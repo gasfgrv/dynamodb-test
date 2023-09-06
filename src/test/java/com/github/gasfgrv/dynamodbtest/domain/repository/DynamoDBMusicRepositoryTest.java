@@ -1,9 +1,13 @@
 package com.github.gasfgrv.dynamodbtest.domain.repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
+import java.util.Collections;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,13 +66,21 @@ class DynamoDBMusicRepositoryTest {
     @Test
     void testQueryMusicsWithArtist() {
         var queryList = mock(PaginatedQueryList.class);
+        var iterator = MusicMock.getMusics().iterator();
+
+        willReturn(iterator)
+                .given(queryList)
+                .iterator();
 
         willReturn(queryList)
                 .given(dynamoDBMapper)
                 .query(eq(MusicEntity.class), any());
 
-        musicRepository
+        var queried = musicRepository
                 .queryMusics("Ain't No Sunshine", "Bill Withers");
+
+        assertThat(queried)
+                .isNotEmpty();
 
         verify(dynamoDBMapper, times(1))
                 .query(eq(MusicEntity.class), any());
@@ -77,16 +89,55 @@ class DynamoDBMusicRepositoryTest {
     @Test
     void testQueryMusicsWithoutArtist() {
         var queryList = mock(PaginatedQueryList.class);
+        var iterator = MusicMock.getMusics().iterator();
+
+        willReturn(iterator)
+                .given(queryList)
+                .iterator();
 
         willReturn(queryList)
                 .given(dynamoDBMapper)
                 .query(eq(MusicEntity.class), any());
 
-        musicRepository
+        var queried = musicRepository
                 .queryMusics("Ain't No Sunshine", null);
+
+        assertThat(queried)
+                .isNotEmpty();
 
         verify(dynamoDBMapper, times(1))
                 .query(eq(MusicEntity.class), any());
+    }
+
+    @Test
+    void testScanMusic() {
+        var music = MusicMock.getMusic();
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", music.getAlbum());
+        fields.put("ProducedBy", music.getProducedBy().get(0));
+        fields.put("ReleasedIn", String.valueOf(music.getReleasedIn()));
+        fields.put("WrittenBy", music.getWrittenBy().get(0));
+
+        var scanList = mock(PaginatedScanList.class);
+        var iterator = Collections.singletonList(music).iterator();
+
+        willReturn(iterator)
+                .given(scanList)
+                .iterator();
+
+        willReturn(scanList)
+                .given(dynamoDBMapper)
+                .scan(eq(MusicEntity.class), any(DynamoDBScanExpression.class));
+
+        var scan = musicRepository
+                .scanMusics(fields);
+
+        assertThat(scan)
+                .isNotEmpty();
+
+        verify(dynamoDBMapper, times(1))
+                .scan(eq(MusicEntity.class), any(DynamoDBScanExpression.class));
     }
 
 }

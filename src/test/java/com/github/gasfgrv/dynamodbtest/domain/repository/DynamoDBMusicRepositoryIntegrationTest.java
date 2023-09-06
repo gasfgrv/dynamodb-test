@@ -3,6 +3,7 @@ package com.github.gasfgrv.dynamodbtest.domain.repository;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguration;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
+import java.util.HashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,30 @@ class DynamoDBMusicRepositoryIntegrationTest extends GenericIntegrationTestConfi
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparator()
                 .hasSameElementsAs(musics);
+    }
+
+    @Test
+    void testScanMusic() {
+        var music = MusicMock.getMusic();
+        musicRepository.insertMusic(music);
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", music.getAlbum());
+        fields.put("ProducedBy", music.getProducedBy().get(0));
+        fields.put("ReleasedIn", String.valueOf(music.getReleasedIn()));
+        fields.put("WrittenBy", music.getWrittenBy().get(0));
+
+        var scanMusic = musicRepository
+                .scanMusics(fields)
+                .stream()
+                .toList();
+
+        assertThat(scanMusic)
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .filteredOn("songTitle", "Falso Realismo")
+                .filteredOn("artist", "Jambu")
+                .containsOnly(music);
     }
 
 }
