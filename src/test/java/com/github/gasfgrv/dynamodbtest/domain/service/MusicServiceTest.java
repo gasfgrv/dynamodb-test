@@ -1,10 +1,12 @@
 package com.github.gasfgrv.dynamodbtest.domain.service;
 
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
+import com.github.gasfgrv.dynamodbtest.domain.exception.NullFieldsException;
 import com.github.gasfgrv.dynamodbtest.domain.model.MusicEntity;
 import com.github.gasfgrv.dynamodbtest.domain.repository.MusicRepository;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
 import java.util.Collections;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,9 +16,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -178,5 +182,71 @@ class MusicServiceTest {
                 .queryMusics("Evidências", "Chitãozinho & Xororó");
     }
 
+    @Test
+    void testFindByWithAllFieldsAreNull() {
+        var fields = new HashMap<String, String>();
+        fields.put("Album", null);
+        fields.put("ProducedBy", null);
+        fields.put("ReleasedIn", null);
+        fields.put("WrittenBy", null);
+
+        assertThatExceptionOfType(NullFieldsException.class)
+                .isThrownBy(() -> musicService.findBy(fields))
+                .withMessage("Please enter at least one of the following parameters: 'album', 'produced_by', 'released_in', 'written_by'");
+
+        verify(musicRepository, never())
+                .scanMusics(anyMap());
+    }
+
+    @Test
+    void testFindBy() {
+        var music = MusicMock.getMusic();
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", music.getAlbum());
+        fields.put("ProducedBy", music.getProducedBy().get(0));
+        fields.put("ReleasedIn", String.valueOf(music.getReleasedIn()));
+        fields.put("WrittenBy", music.getWrittenBy().get(0));
+
+        willReturn(Collections.singletonList(music))
+                .given(musicRepository)
+                .scanMusics(fields);
+
+        var findMusic = musicService
+                .findBy(fields);
+
+        assertThat(findMusic)
+                .isNotEmpty()
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .contains(music);
+
+        verify(musicRepository, times(1))
+                .scanMusics(anyMap());
+    }
+
+    @Test
+    void testFindByRetunsEmpty() {
+        var musics = Collections.emptyList();
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", "null");
+        fields.put("ProducedBy", "null");
+        fields.put("ReleasedIn", "null");
+        fields.put("WrittenBy", "null");
+
+        willReturn(musics)
+                .given(musicRepository)
+                .scanMusics(anyMap());
+
+        var findMusic = musicService
+                .findBy(fields);
+
+        assertThat(findMusic)
+                .isEmpty();
+
+        verify(musicRepository, times(1))
+                .scanMusics(anyMap());
+    }
 
 }

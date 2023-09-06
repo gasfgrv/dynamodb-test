@@ -3,7 +3,9 @@ package com.github.gasfgrv.dynamodbtest.domain.service;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.gasfgrv.dynamodbtest.config.GenericIntegrationTestConfiguration;
 import com.github.gasfgrv.dynamodbtest.domain.exception.MusicNotFoundException;
+import com.github.gasfgrv.dynamodbtest.domain.exception.NullFieldsException;
 import com.github.gasfgrv.dynamodbtest.mocks.MusicMock;
+import java.util.HashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -173,6 +175,58 @@ class MusicServiceIntegrationTest extends GenericIntegrationTestConfiguration {
         assertThat(musicsFound)
                 .isEmpty();
 
+    }
+
+    @Test
+    void testFindByWithAllFieldsAreNull() {
+        var fields = new HashMap<String, String>();
+        fields.put("Album", null);
+        fields.put("ProducedBy", null);
+        fields.put("ReleasedIn", null);
+        fields.put("WrittenBy", null);
+
+        assertThatExceptionOfType(NullFieldsException.class)
+                .isThrownBy(() -> musicService.findBy(fields))
+                .withMessage("Please enter at least one of the following parameters: 'album', 'produced_by', 'released_in', 'written_by'");
+    }
+
+    @Test
+    void testFindBy() {
+        var music = MusicMock.getMusic();
+        musicService.addASong(music);
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", music.getAlbum());
+        fields.put("ProducedBy", music.getProducedBy().get(0));
+        fields.put("ReleasedIn", String.valueOf(music.getReleasedIn()));
+        fields.put("WrittenBy", music.getWrittenBy().get(0));
+
+        var findMusic = musicService
+                .findBy(fields);
+
+        assertThat(findMusic)
+                .isNotEmpty()
+                .hasSize(1)
+                .usingRecursiveFieldByFieldElementComparator()
+                .contains(music);
+    }
+
+    @Test
+    void testFindByRetunsEmpty() {
+        var music = MusicMock.getMusic();
+        musicService.addASong(music);
+
+        var fields = new HashMap<String, String>();
+        fields.put("Album", "null");
+        fields.put("ProducedBy", "null");
+        fields.put("ReleasedIn", "0");
+        fields.put("WrittenBy", "null");
+
+        var findMusic = musicService
+                .findBy(fields);
+
+        assertThat(findMusic)
+                .isEmpty();
     }
 
 }
